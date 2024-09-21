@@ -1,0 +1,26 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% block content %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
+            <h4>{{ user_profile.full_name }}</h4>
+            <p>Email: {{ user_profile.email }}</p>
+            <p>Username: {{ user.username }}</p>
+            <!-- Edit Button -->
+            <button id="editButton">Edit Profile</button>
+        </div>
+
+        <!-- Edit Profile Form -->
+        <div id="editForm" class="edit-form" style="display: none;">
+            <h4>Edit Profile</h4>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

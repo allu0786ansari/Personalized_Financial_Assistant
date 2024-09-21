@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Personalized Financial Assistant</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <!-- Navigation Bar -->
+        <h3> Welcome to Personalized Financial Assistant </h3>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href=" {% url 'dashboard' %}">Dashboard</a></li>
+                <li><a href=" ">About</a></li>
+                <li><a href=" ">Contact</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'signout' %}">Sign Out</a></li>
+                {% else %}
+                    <li><a href="{% url 'signin' %}">Sign In</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dimension fade show" role="alert">
+            <strong>  </strong> {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+
+        {% if user.is_authenticated %}
+            <h3> Hello, {{ fname }} </h3>
+            <h4> You're successfully logged in. </h4>
+        {% else %}
+
+            <p>Please log in to access your dashboard.</p>
+
+        {% endif %}
+
+        <script src="" async defer></script>
+    </body>
+</html>

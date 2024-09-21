@@ -1,0 +1,40 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% block content %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/help.css' %}">
+
+
+    <section id="faq">
+        <h4>Frequently Asked Questions</h4>
+        <ul>
+            <li>
+                <strong>How do I reset my password?</strong>
+                <p>To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions to reset it.</p>
+            </li>
+            <li>
+                <strong>How can I contact support?</strong>
+                <p>You can contact our support team by emailing support@example.com or by using the contact form on our <a href=" ">Contact Us</a> page.</p>
+            </li>
+            <!-- Add more FAQs as needed -->
+        </ul>
+    </section>
+
+    <section id="contact">
+        <h4>Contact Us</h4>
+        <p>If you have any other questions or need further assistance, please reach out to us:</p>
+        <ul>
+            <li>Email: <a href="mailto:support@example.com">support@example.com</a></li>
+            <li>Phone: 123-456-7890</li>
+            <!-- Add other contact methods if applicable -->
+        </ul>
+    </section>
+
+    <section id="search">
+        <h4>Search Help Articles</h4>
+        <form method="get" action=" ">
+            <input type="text" name="query" placeholder="Search help articles...">
+            <button type="submit">Search</button>
+        </form>
+    </section>
+
+{% endblock %}

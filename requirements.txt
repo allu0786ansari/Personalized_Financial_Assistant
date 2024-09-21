@@ -1,0 +1,4 @@
+virtualenv
+django
+mysqlclient
+PyMySQL

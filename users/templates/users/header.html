@@ -1,0 +1,65 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/header.css' %}?v=1.1">
+
+<nav>
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <h3>Personalized Financial Assistant</h3>
+
+        <!-- Hamburger icon for mobile view -->
+        <div class="nav-toggle">&#9776;</div>
+
+        <!-- Navigation Links -->
+        <div class="w-full md:block md:w-auto" id="navbar-default">
+            <ul class="font-medium flex flex-col p-4 md:p-0 my-1 md:my-2 rounded-lg md:flex-row md:space-x-8">
+                {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'homepage' %}" class="block py-2 pl-3 pr-4 text-white rounded md:p-0">
+                            Homepage
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'visualization' %}" class="block py-2 pl-3 pr-4 text-white rounded md:p-0">
+                            Visualization
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'advice' %}" class="block py-2 pl-3 pr-4 text-white rounded md:p-0">
+                            Advice
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'profile' %}" class="block py-2 pl-3 pr-4 text-white rounded md:p-0">
+                            Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'signout' %}" class="block py-2 pl-3 pr-4 text-white rounded md:p-0">
+                            Logout
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'signin' %}" class="block py-2 pl-3 pr-4 text-white rounded md:p-0">
+                            Login
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'signup' %}" class="block py-2 pl-3 pr-4 text-white rounded md:p-0">
+                            Sign Up
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- JavaScript to Toggle Mobile Menu -->
+<script>
+    const toggleButton = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('#navbar-default ul');
+
+    toggleButton.addEventListener('click', () => {
+        navMenu.classList.toggle('hidden');
+    });
+</script>

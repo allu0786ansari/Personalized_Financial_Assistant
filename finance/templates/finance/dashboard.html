@@ -1,0 +1,76 @@
+
+{% extends 'users/base.html' %}
+{% load static %}
+{% block content %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+
+    <div class="container">
+        <h3>Dashboard</h3>
+
+
+        <!-- Section to add financial transactions -->
+        <div class="section">
+            <h4>Add Financial Transaction</h4>
+            <form id="transactionForm">
+                <div class="form-group">
+                    <label for="transactionType">Transaction Type</label>
+                    <select id="transactionType">
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transactionAmount">Amount</label>
+                    <input type="number" id="transactionAmount" placeholder="Enter amount">
+                </div>
+                <div class="form-group">
+                    <label for="transactionCategory">Category</label>
+                    <input type="text" id="transactionCategory" placeholder="E.g. Rent, Salary, Groceries">
+                </div>
+                <button type="button" onclick="addTransaction()">Add Transaction</button>
+            </form>
+        </div>
+
+        <!-- Section to manage budget -->
+        <div class="section">
+            <h4>Set Budget</h4>
+            <form id="budgetForm">
+                <div class="form-group">
+                    <label for="budgetAmount">Monthly Budget</label>
+                    <input type="number" id="budgetAmount" placeholder="Enter monthly budget">
+                </div>
+                <button type="button" onclick="setBudget()">Set Budget</button>
+            </form>
+        </div>
+
+        <!-- Section to track savings -->
+        <div class="section">
+            <h4>Track Savings</h4>
+            <form id="savingsForm">
+                <div class="form-group">
+                    <label for="savingsGoal">Savings Goal</label>
+                    <input type="number" id="savingsGoal" placeholder="Enter savings goal">
+                </div>
+                <div class="form-group">
+                    <label for="savingsAmount">Amount Saved</label>
+                    <input type="number" id="savingsAmount" placeholder="Enter amount saved so far">
+                </div>
+                <button type="button" onclick="trackSavings()">Track Savings</button>
+            </form>
+        </div>
+
+        <!-- Financial Summary -->
+        <div class="summary">
+            <h4>Financial Summary</h4>
+            <div id="summaryBudget">Budget: Rs 0</div>
+            <div id="summarySavings">Savings Goal: Rs 0</div>
+            <div id="summaryIncome">Total Income: Rs 0</div>
+            <div id="summaryExpenses">Total Expenses: Rs 0</div>
+            <div id="summaryBalance">Remaining Balance: Rs 0</div>
+        </div>
+    </div>
+
+    <script>
+
+    </script>
+{% endblock %}

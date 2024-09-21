@@ -1,0 +1,35 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% block content %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/signin.css' %}">
+        <div class="navbar">
+            <div class="welcome-message">
+                Welcome, {{ user.username }}!
+            </div>
+
+        </div>
+        
+        <div class="container">
+
+            
+            <div class="section">
+                <h2>Your Financial Dashboard</h2>
+                <p>Here you can view your financial overview, recent transactions, and manage your budget.</p>
+                <a href="{% url 'dashboard' %}" class="btn">Go to Dashboard</a>
+            </div>
+            
+            <div class="section">
+                <h2>Account Settings</h2>
+                <p>Manage your account settings, update your profile, and change your password.</p>
+                <a href="{% url 'profile' %}" class="btn">Profile Settings</a>
+            </div>
+            
+            <div class="section">
+                <h2>Help & Support</h2>
+                <p>If you need help or support, you can contact us or visit our help center.</p>
+                <a href="{% url 'transaction_container' %}" class="btn">Help Center</a>
+            </div>
+        </div>
+        
+        <script src="" async defer></script>
+{% endblock %}
