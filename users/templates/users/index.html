@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -12,13 +13,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
     </head>
+    {% load static %}
+                <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+
     <body>
         <!-- Navigation Bar -->
         <h3> Welcome to Personalized Financial Assistant </h3>
         <nav>
             <ul>
                 <li><a href="{% url 'index' %}">Home</a></li>
-                <li><a href=" {% url 'dashboard' %}">Dashboard</a></li>
+                <li><a href=" ">Dashboard</a></li>
                 <li><a href=" ">About</a></li>
                 <li><a href=" ">Contact</a></li>
                 {% if user.is_authenticated %}
@@ -46,6 +50,17 @@
             <p>Please log in to access your dashboard.</p>
 
         {% endif %}
+        <div class="container">
+            <img src="https://cdn.corporatefinanceinstitute.com/assets/ai-for-financial-analysis-1.jpeg" alt="AI for Financial Analysis" class="image">
+                <div class="content">
+                    <h1>About Our Application</h1>
+                    <p>
+                        Our application leverages advanced AI technologies to enhance financial analysis and decision-making.
+                        With real-time data processing and intuitive dashboards, we empower users to make informed financial decisions with ease.
+                    </p>
+
+                </div>
+        </div>
 
         <script src="" async defer></script>
     </body>

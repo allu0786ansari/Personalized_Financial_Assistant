@@ -38,3 +38,13 @@
         </div>
     </div>
 </footer>
+
+<script>
+    const toggleButton = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('#navbar-default ul');
+
+    toggleButton.addEventListener('click', () => {
+        navMenu.classList.toggle('hidden');
+    });
+</script>
+
