@@ -1,91 +1,93 @@
-/* Reset some default styles */
-body, h2, p, a {
+* {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-}
-body {
-    background-color: #f4f4f4;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    margin-top: 10rem;
+    box-sizing: border-box;
 }
 
-/* Center the signup container */
-.container {
-    flex: 1;
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
     width: 100%;
-    max-width: 34%;
-    margin-left: 33%;
-    margin-right: 33%;
+    text-align: center;
 }
 
 h2 {
     margin-bottom: 20px;
-    color: blue;
+    color: #333;
+    font-size: 24px;
 }
 
-form {
-    width: 100%;
-}
-
-div {
+.form-group {
     margin-bottom: 15px;
+    text-align: left;
 }
 
-label {
+.form-group label {
     display: block;
     margin-bottom: 5px;
-    color: #00008B;
+    font-weight: bold;
+    color: #333;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"] {
+.form-group input {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f9f9f9;
 }
 
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
+.form-group input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.form-group button {
     width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-button:hover {
+.form-group button:hover {
     background-color: #0056b3;
 }
 
-ul {
-    list-style-type: none;
+.messages {
+    list-style: none;
+    margin-top: 20px;
     padding: 0;
-    margin-bottom: 20px;
+    color: red;
 }
 
-li {
-    color: #d9534f; /* Color for error messages */
+p {
+    margin-top: 10px;
+    font-size: 14px;
 }
-a {
+
+p a {
     color: #007bff;
     text-decoration: none;
 }
 
-a:hover {
+p a:hover {
     text-decoration: underline;
 }

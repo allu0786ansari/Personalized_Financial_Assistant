@@ -3,28 +3,14 @@
 {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/signin.css' %}">
 
-    <div class="signup-container">
+    <div class="container">
         <h2>Sign Up</h2>
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li class="{{ message.tags }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+
         <form action="{% url 'signup' %}" method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label for="username">Username:</label>
-                <input type="text" id="username" name="username" placeholder="Create your username." required>
-            </div>
-            <div class="form-group">
-                <label for="first_name">First Name:</label>
-                <input type="text" id="first_name" name="first_name" placeholder="Enter your first name." required>
-            </div>
-            <div class="form-group">
-                <label for="last_name">Last Name:</label>
-                <input type="text" id="last_name" name="last_name" placeholder="Enter your last name." required>
+                <input type="text" id="username" name="username" placeholder="Username" required>
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>
@@ -42,5 +28,16 @@
                 <button type="submit">Sign Up</button>
             </div>
         </form>
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <p>Already have an account? <a href="{% url 'signin' %}">Sign In</a>.</p>
+        <p>Go back to the homepage? <a href="{% url 'index' %}">Home</a></p>
     </div>
 {% endblock %}
