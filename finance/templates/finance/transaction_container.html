@@ -3,272 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance Tracker</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
-            padding: 20px;
-        }
-
-        .finance-tracker {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        header {
-            background-color: #1f4c73;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .totals-section {
-            padding: 20px;
-            background-color: #e8eff7;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .totals {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .totals div {
-            text-align: center;
-        }
-
-        .transactions-section {
-            padding: 20px;
-        }
-
-        .transactions-section table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .transactions-section th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .edit-btn, .delete-btn {
-            background-color: #1f4c73;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-right: 5px;
-        }
-
-        .filters-section, .add-transaction-section {
-            padding: 20px;
-            background-color: #f5f7fa;
-            border-top: 1px solid #ddd;
-        }
-
-        .filters-section form, .add-transaction-form {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .filters-section form div, .add-transaction-form div {
-            margin-right: 20px;
-            margin-bottom: 10px;
-        }
-
-        .categories {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .categories label {
-            margin-right: 10px;
-        }
-
-        .add-transaction-section input, select {
-            padding: 5px;
-            margin-right: 10px;
-        }
-    </style>
+    <title>Finance Charts</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/transaction.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-
-    <div class="finance-tracker">
-        <!-- Updated Header with Navigation Links -->
+    <div class="container">
         <header>
-            <h1>Finance Tracker</h1>
-            <nav class="nav-links">
-                <a href="#">My Transactions</a>
-                <a href="#">My Charts</a>
-                <a href="#">Log Out</a>
-            </nav>
+            <h1>My Charts</h1>
         </header>
 
-        <div class="totals-section">
-            <h2>Transaction List</h2>
-            <div class="totals">
+        <div class="charts-section">
+            <div class="main-chart">
+                <h2>Total Income vs Expenses</h2>
+                <canvas id="incomeExpenseChart"></canvas>
                 <div>
-                    <p>Total Income</p>
-                    <h3 id="total-income">$0.00</h3>
+                    <label for="income-input">Income:</label>
+                    <input type="number" id="income-input" placeholder="Enter income" />
+                    <label for="expenditure-input">Expenditure:</label>
+                    <input type="number" id="expenditure-input" placeholder="Enter expenditure" />
                 </div>
-                <div>
-                    <p>Total Expenses</p>
-                    <h3 id="total-expenses">$0.00</h3>
+            </div>
+            <div class="filter-section">
+                <h3>Filters</h3>
+                <label for="type-select">Type:</label>
+                <select id="type-select">
+                    <option value="any">Any</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+
+                <label for="date-from">Date From:</label>
+                <input type="date" id="date-from">
+
+                <label for="date-to">Date To:</label>
+                <input type="date" id="date-to">
+
+                <h4>Categories</h4>
+                <div class="categories">
+                    <input type="checkbox" id="bills" checked><label for="bills">Bills</label>
+                    <input type="checkbox" id="food"><label for="food">Food</label>
+                    <input type="checkbox" id="clothes"><label for="clothes">Clothes</label>
+                    <input type="checkbox" id="medical" checked><label for="medical">Medical</label>
+                    <input type="checkbox" id="housing" checked><label for="housing">Housing</label>
+                    <input type="checkbox" id="salary" checked><label for="salary">Salary</label>
+                    <input type="checkbox" id="social"><label for="social">Social</label>
+                    <input type="checkbox" id="transport"><label for="transport">Transport</label>
+                    <input type="checkbox" id="vacation"><label for="vacation">Vacation</label>
+                    <input type="checkbox" id="random"><label for="random">Random</label>
                 </div>
-                <div>
-                    <p>Net Income</p>
-                    <h3 id="net-income" style="color: green;">$0.00</h3>
-                </div>
+                <button id="filterBtn">Filter</button>
             </div>
         </div>
 
-        <div class="transactions-section">
-            <h3>Transactions</h3>
-            <table id="transaction-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Category</th>
-                        <th>Type</th>
-                        <th>Amount</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="transaction-list">
-                    <!-- Transactions will be added here dynamically -->
-                </tbody>
-            </table>
-        </div>
-
-        <div class="add-transaction-section">
-            <h3>Add Transaction</h3>
-            <form class="add-transaction-form" id="add-transaction-form">
+        <div class="pie-charts">
+            <div class="pie-chart">
+                <h3>Total Amount per Category</h3>
+                <canvas id="categoryPieChart1"></canvas>
                 <div>
-                    <label for="date">Date:</label>
-                    <input type="date" id="date" required>
+                    <label for="category-input-1">Enter amounts (Transport, Salary, Food, Bills, Medical, Housing, Clothes):</label>
+                    <input type="number" id="category-input-1" placeholder="Transport" />
+                    <input type="number" id="category-input-2" placeholder="Salary" />
+                    <input type="number" id="category-input-3" placeholder="Food" />
+                    <input type="number" id="category-input-4" placeholder="Bills" />
+                    <input type="number" id="category-input-5" placeholder="Medical" />
+                    <input type="number" id="category-input-6" placeholder="Housing" />
+                    <input type="number" id="category-input-7" placeholder="Clothes" />
                 </div>
+            </div>
+            <div class="pie-chart">
+                <h3>Total Amount per Category</h3>
+                <canvas id="categoryPieChart2"></canvas>
                 <div>
-                    <label for="category">Category:</label>
-                    <input type="text" id="category" required>
+                    <label for="category-input-8">Enter amounts (Transport, Salary, Food, Bills, Medical, Housing, Clothes):</label>
+                    <input type="number" id="category-input-8" placeholder="Transport" />
+                    <input type="number" id="category-input-9" placeholder="Salary" />
+                    <input type="number" id="category-input-10" placeholder="Food" />
+                    <input type="number" id="category-input-11" placeholder="Bills" />
+                    <input type="number" id="category-input-12" placeholder="Medical" />
+                    <input type="number" id="category-input-13" placeholder="Housing" />
+                    <input type="number" id="category-input-14" placeholder="Clothes" />
                 </div>
-                <div>
-                    <label for="type">Type:</label>
-                    <select id="type" required>
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="amount">Amount:</label>
-                    <input type="number" id="amount" step="0.01" required>
-                </div>
-                <button type="submit">Add Transaction</button>
-            </form>
+            </div>
         </div>
     </div>
-
     <script>
-        const transactionList = document.getElementById('transaction-list');
-        const totalIncomeElement = document.getElementById('total-income');
-        const totalExpensesElement = document.getElementById('total-expenses');
-        const netIncomeElement = document.getElementById('net-income');
+        document.addEventListener('DOMContentLoaded', () => {
+            const incomeExpenseChartCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+            const categoryPieChart1Ctx = document.getElementById('categoryPieChart1').getContext('2d');
+            const categoryPieChart2Ctx = document.getElementById('categoryPieChart2').getContext('2d');
 
-        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-
-        function updateTotals() {
-            const totalIncome = transactions
-                .filter(t => t.type === 'income')
-                .reduce((acc, t) => acc + parseFloat(t.amount), 0);
-            const totalExpenses = transactions
-                .filter(t => t.type === 'expense')
-                .reduce((acc, t) => acc + parseFloat(t.amount), 0);
-            const netIncome = totalIncome - totalExpenses;
-
-            totalIncomeElement.textContent = `$${totalIncome.toFixed(2)}`;
-            totalExpensesElement.textContent = `$${totalExpenses.toFixed(2)}`;
-            netIncomeElement.textContent = `$${netIncome.toFixed(2)}`;
-        }
-
-        function addTransactionToDOM(transaction, index) {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${transaction.date}</td>
-                <td>${transaction.category}</td>
-                <td>${transaction.type}</td>
-                <td>$${parseFloat(transaction.amount).toFixed(2)}</td>
-                <td>
-                    <button class="delete-btn" onclick="deleteTransaction(${index})">Delete</button>
-                </td>
-            `;
-            transactionList.appendChild(tr);
-        }
-
-        function updateTransactionList() {
-            transactionList.innerHTML = '';
-            transactions.forEach((transaction, index) => {
-                addTransactionToDOM(transaction, index);
+            // Initialize charts with zero data
+            const incomeExpenseChart = new Chart(incomeExpenseChartCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Income', 'Expenditure'],
+                    datasets: [{
+                        label: 'Amount',
+                        data: [0, 0],  // Default data
+                        backgroundColor: ['#3c8dbc', '#ff6384'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
             });
-            updateTotals();
-        }
 
-        function deleteTransaction(index) {
-            transactions.splice(index, 1);
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-            updateTransactionList();
-        }
+            const categoryPieChart1 = new Chart(categoryPieChart1Ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Transport', 'Salary', 'Food', 'Bills', 'Medical', 'Housing', 'Clothes'],
+                    datasets: [{
+                        label: 'Total Amount per Category',
+                        data: [0, 0, 0, 0, 0, 0, 0],  // Default data
+                        backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'],
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
 
-        document.getElementById('add-transaction-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+            const categoryPieChart2 = new Chart(categoryPieChart2Ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Transport', 'Salary', 'Food', 'Bills', 'Medical', 'Housing', 'Clothes'],
+                    datasets: [{
+                        label: 'Total Amount per Category',
+                        data: [0, 0, 0, 0, 0, 0, 0],  // Default data
+                        backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'],
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
 
-            const date = document.getElementById('date').value;
-            const category = document.getElementById('category').value;
-            const type = document.getElementById('type').value;
-            const amount = document.getElementById('amount').value;
+            // Filter button logic
+            document.getElementById('filterBtn').addEventListener('click', () => {
+                const income = parseFloat(document.getElementById('income-input').value) || 0;
+                const expenditure = parseFloat(document.getElementById('expenditure-input').value) || 0;
 
-            const transaction = { date, category, type, amount };
-            transactions.push(transaction);
+                incomeExpenseChart.data.datasets[0].data = [income, expenditure];
+                incomeExpenseChart.update();
 
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-            updateTransactionList();
+                const categoryData1 = [
+                    parseFloat(document.getElementById('category-input-1').value) || 0,
+                    parseFloat(document.getElementById('category-input-2').value) || 0,
+                    parseFloat(document.getElementById('category-input-3').value) || 0,
+                    parseFloat(document.getElementById('category-input-4').value) || 0,
+                    parseFloat(document.getElementById('category-input-5').value) || 0,
+                    parseFloat(document.getElementById('category-input-6').value) || 0,
+                    parseFloat(document.getElementById('category-input-7').value) || 0
+                ];
+                categoryPieChart1.data.datasets[0].data = categoryData1;
+                categoryPieChart1.update();
 
-            // Clear the form
-            document.getElementById('add-transaction-form').reset();
+                const categoryData2 = [
+                    parseFloat(document.getElementById('category-input-8').value) || 0,
+                    parseFloat(document.getElementById('category-input-9').value) || 0,
+                    parseFloat(document.getElementById('category-input-10').value) || 0,
+                    parseFloat(document.getElementById('category-input-11').value) || 0,
+                    parseFloat(document.getElementById('category-input-12').value) || 0,
+                    parseFloat(document.getElementById('category-input-13').value) || 0,
+                    parseFloat(document.getElementById('category-input-14').value) || 0
+                ];
+                categoryPieChart2.data.datasets[0].data = categoryData2;
+                categoryPieChart2.update();
+            });
         });
-
-        // Load initial transactions from localStorage
-        updateTransactionList();
     </script>
 </body>
 </html>
