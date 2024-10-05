@@ -4,112 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Tracker</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
-            padding: 20px;
-        }
-
-        .finance-tracker {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        header {
-            background-color: #1f4c73;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-        }
-
-        .totals-section {
-            padding: 20px;
-            background-color: #e8eff7;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .totals {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .totals div {
-            text-align: center;
-        }
-
-        .transactions-section {
-            padding: 20px;
-        }
-
-        .transactions-section table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .transactions-section th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .edit-btn, .delete-btn {
-            background-color: #1f4c73;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-right: 5px;
-        }
-
-        .filters-section, .add-transaction-section {
-            padding: 20px;
-            background-color: #f5f7fa;
-            border-top: 1px solid #ddd;
-        }
-
-        .filters-section form, .add-transaction-form {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .filters-section form div, .add-transaction-form div {
-            margin-right: 20px;
-            margin-bottom: 10px;
-        }
-
-        .categories {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .categories label {
-            margin-right: 10px;
-        }
-
-        .add-transaction-section input, select {
-            padding: 5px;
-            margin-right: 10px;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
 
     <div class="finance-tracker">
+        <!-- Updated Header with Navigation Links -->
         <header>
             <h1>Finance Tracker</h1>
+            <nav class="nav-links">
+                <a href="{% url 'homepage' %}">Home</a>
+                <a href="{% url 'visualization' %}">Visualization</a>
+                <a href="{% url 'signout' %}">Sign Out</a>
+            </nav>
         </header>
 
         <div class="totals-section">

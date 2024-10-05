@@ -4,13 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            padding: 20px;
+        }
+
+        .finance-tracker {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #1f4c73;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .totals-section {
+            padding: 20px;
+            background-color: #e8eff7;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .totals {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .totals div {
+            text-align: center;
+        }
+
+        .transactions-section {
+            padding: 20px;
+        }
+
+        .transactions-section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transactions-section th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .edit-btn, .delete-btn {
+            background-color: #1f4c73;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+
+        .filters-section, .add-transaction-section {
+            padding: 20px;
+            background-color: #f5f7fa;
+            border-top: 1px solid #ddd;
+        }
+
+        .filters-section form, .add-transaction-form {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .filters-section form div, .add-transaction-form div {
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .categories label {
+            margin-right: 10px;
+        }
+
+        .add-transaction-section input, select {
+            padding: 5px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
 
     <div class="finance-tracker">
+        <!-- Updated Header with Navigation Links -->
         <header>
             <h1>Finance Tracker</h1>
+            <nav class="nav-links">
+                <a href="#">My Transactions</a>
+                <a href="#">My Charts</a>
+                <a href="#">Log Out</a>
+            </nav>
         </header>
 
         <div class="totals-section">
@@ -77,7 +200,75 @@
     </div>
 
     <script>
+        const transactionList = document.getElementById('transaction-list');
+        const totalIncomeElement = document.getElementById('total-income');
+        const totalExpensesElement = document.getElementById('total-expenses');
+        const netIncomeElement = document.getElementById('net-income');
 
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+        function updateTotals() {
+            const totalIncome = transactions
+                .filter(t => t.type === 'income')
+                .reduce((acc, t) => acc + parseFloat(t.amount), 0);
+            const totalExpenses = transactions
+                .filter(t => t.type === 'expense')
+                .reduce((acc, t) => acc + parseFloat(t.amount), 0);
+            const netIncome = totalIncome - totalExpenses;
+
+            totalIncomeElement.textContent = `$${totalIncome.toFixed(2)}`;
+            totalExpensesElement.textContent = `$${totalExpenses.toFixed(2)}`;
+            netIncomeElement.textContent = `$${netIncome.toFixed(2)}`;
+        }
+
+        function addTransactionToDOM(transaction, index) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${transaction.date}</td>
+                <td>${transaction.category}</td>
+                <td>${transaction.type}</td>
+                <td>$${parseFloat(transaction.amount).toFixed(2)}</td>
+                <td>
+                    <button class="delete-btn" onclick="deleteTransaction(${index})">Delete</button>
+                </td>
+            `;
+            transactionList.appendChild(tr);
+        }
+
+        function updateTransactionList() {
+            transactionList.innerHTML = '';
+            transactions.forEach((transaction, index) => {
+                addTransactionToDOM(transaction, index);
+            });
+            updateTotals();
+        }
+
+        function deleteTransaction(index) {
+            transactions.splice(index, 1);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            updateTransactionList();
+        }
+
+        document.getElementById('add-transaction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const date = document.getElementById('date').value;
+            const category = document.getElementById('category').value;
+            const type = document.getElementById('type').value;
+            const amount = document.getElementById('amount').value;
+
+            const transaction = { date, category, type, amount };
+            transactions.push(transaction);
+
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            updateTransactionList();
+
+            // Clear the form
+            document.getElementById('add-transaction-form').reset();
+        });
+
+        // Load initial transactions from localStorage
+        updateTransactionList();
     </script>
 </body>
 </html>
