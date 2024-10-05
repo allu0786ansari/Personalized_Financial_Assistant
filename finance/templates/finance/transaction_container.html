@@ -4,101 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Tracker</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
-            padding: 20px;
-        }
-
-        .finance-tracker {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        header {
-            background-color: #1f4c73;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-        }
-
-        .totals-section {
-            padding: 20px;
-            background-color: #e8eff7;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .totals {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .totals div {
-            text-align: center;
-        }
-
-        .transactions-section {
-            padding: 20px;
-        }
-
-        .transactions-section table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .transactions-section th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .edit-btn, .delete-btn {
-            background-color: #1f4c73;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-right: 5px;
-        }
-
-        .filters-section {
-            padding: 20px;
-            background-color: #f5f7fa;
-            border-top: 1px solid #ddd;
-        }
-
-        .filters-section form {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .filters-section form div {
-            margin-right: 20px;
-            margin-bottom: 10px;
-        }
-
-        .categories {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .categories label {
-            margin-right: 10px;
-        }
-    </style>
 </head>
 <body>
 
@@ -112,22 +18,22 @@
             <div class="totals">
                 <div>
                     <p>Total Income</p>
-                    <h3>$32,429.27</h3>
+                    <h3 id="total-income">$0.00</h3>
                 </div>
                 <div>
                     <p>Total Expenses</p>
-                    <h3>$24,267.33</h3>
+                    <h3 id="total-expenses">$0.00</h3>
                 </div>
                 <div>
                     <p>Net Income</p>
-                    <h3 style="color: green;">$8,161.94</h3>
+                    <h3 id="net-income" style="color: green;">$0.00</h3>
                 </div>
             </div>
         </div>
 
         <div class="transactions-section">
             <h3>Transactions</h3>
-            <table>
+            <table id="transaction-table">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -137,92 +43,41 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>May 1, 2027</td>
-                        <td>Food</td>
-                        <td>Income</td>
-                        <td>$213.11</td>
-                        <td>
-                            <button class="edit-btn">Edit</button>
-                            <button class="delete-btn">Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>May 1, 2027</td>
-                        <td>Random</td>
-                        <td>Income</td>
-                        <td>$213.11</td>
-                        <td>
-                            <button class="edit-btn">Edit</button>
-                            <button class="delete-btn">Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Feb 17, 2027</td>
-                        <td>Housing</td>
-                        <td>Expense</td>
-                        <td>$27.11</td>
-                        <td>
-                            <button class="edit-btn">Edit</button>
-                            <button class="delete-btn">Delete</button>
-                        </td>
-                    </tr>
+                <tbody id="transaction-list">
+                    <!-- Transactions will be added here dynamically -->
                 </tbody>
             </table>
         </div>
 
-        <div class="filters-section">
-            <h3>Filter Transactions</h3>
-            <form>
+        <div class="add-transaction-section">
+            <h3>Add Transaction</h3>
+            <form class="add-transaction-form" id="add-transaction-form">
+                <div>
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div>
+                    <label for="category">Category:</label>
+                    <input type="text" id="category" required>
+                </div>
                 <div>
                     <label for="type">Type:</label>
-                    <select id="type">
-                        <option value="any">Any</option>
+                    <select id="type" required>
                         <option value="income">Income</option>
                         <option value="expense">Expense</option>
                     </select>
                 </div>
                 <div>
-                    <label for="from-date">Date From:</label>
-                    <input type="date" id="from-date">
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" step="0.01" required>
                 </div>
-                <div>
-                    <label for="to-date">Date To:</label>
-                    <input type="date" id="to-date">
-                </div>
-                <div class="categories">
-                    <label>Categories:</label>
-                    <label><input type="checkbox" name="bills"> Bills</label>
-                    <label><input type="checkbox" name="food"> Food</label>
-                    <label><input type="checkbox" name="clothes"> Clothes</label>
-                    <label><input type="checkbox" name="medical"> Medical</label>
-                    <label><input type="checkbox" name="housing"> Housing</label>
-                    <label><input type="checkbox" name="salary"> Salary</label>
-                    <label><input type="checkbox" name="social"> Social</label>
-                    <label><input type="checkbox" name="transport"> Transport</label>
-                </div>
+                <button type="submit">Add Transaction</button>
             </form>
         </div>
     </div>
 
     <script>
-        // Add functionality to buttons or filters
 
-        // Example of an edit button click event
-        document.querySelectorAll('.edit-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                alert('Edit button clicked');
-            });
-        });
-
-        // Example of a delete button click event
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.target.closest('tr').remove();
-            });
-        });
     </script>
 </body>
 </html>
-

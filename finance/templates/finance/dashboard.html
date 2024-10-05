@@ -1,76 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-{% extends 'users/base.html' %}
-{% load static %}
-{% block content %}
-            <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            padding: 20px;
+        }
 
-    <div class="container">
-        <h3>Dashboard</h3>
+        .finance-tracker {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
 
+        header {
+            background-color: #1f4c73;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
 
-        <!-- Section to add financial transactions -->
-        <div class="section">
-            <h4>Add Financial Transaction</h4>
-            <form id="transactionForm">
-                <div class="form-group">
-                    <label for="transactionType">Transaction Type</label>
-                    <select id="transactionType">
+        .totals-section {
+            padding: 20px;
+            background-color: #e8eff7;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .totals {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .totals div {
+            text-align: center;
+        }
+
+        .transactions-section {
+            padding: 20px;
+        }
+
+        .transactions-section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transactions-section th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .edit-btn, .delete-btn {
+            background-color: #1f4c73;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+
+        .filters-section, .add-transaction-section {
+            padding: 20px;
+            background-color: #f5f7fa;
+            border-top: 1px solid #ddd;
+        }
+
+        .filters-section form, .add-transaction-form {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .filters-section form div, .add-transaction-form div {
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .categories label {
+            margin-right: 10px;
+        }
+
+        .add-transaction-section input, select {
+            padding: 5px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="finance-tracker">
+        <header>
+            <h1>Finance Tracker</h1>
+        </header>
+
+        <div class="totals-section">
+            <h2>Transaction List</h2>
+            <div class="totals">
+                <div>
+                    <p>Total Income</p>
+                    <h3 id="total-income">$0.00</h3>
+                </div>
+                <div>
+                    <p>Total Expenses</p>
+                    <h3 id="total-expenses">$0.00</h3>
+                </div>
+                <div>
+                    <p>Net Income</p>
+                    <h3 id="net-income" style="color: green;">$0.00</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="transactions-section">
+            <h3>Transactions</h3>
+            <table id="transaction-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-list">
+                    <!-- Transactions will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="add-transaction-section">
+            <h3>Add Transaction</h3>
+            <form class="add-transaction-form" id="add-transaction-form">
+                <div>
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div>
+                    <label for="category">Category:</label>
+                    <input type="text" id="category" required>
+                </div>
+                <div>
+                    <label for="type">Type:</label>
+                    <select id="type" required>
                         <option value="income">Income</option>
                         <option value="expense">Expense</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="transactionAmount">Amount</label>
-                    <input type="number" id="transactionAmount" placeholder="Enter amount">
+                <div>
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" step="0.01" required>
                 </div>
-                <div class="form-group">
-                    <label for="transactionCategory">Category</label>
-                    <input type="text" id="transactionCategory" placeholder="E.g. Rent, Salary, Groceries">
-                </div>
-                <button type="button" onclick="addTransaction()">Add Transaction</button>
+                <button type="submit">Add Transaction</button>
             </form>
-        </div>
-
-        <!-- Section to manage budget -->
-        <div class="section">
-            <h4>Set Budget</h4>
-            <form id="budgetForm">
-                <div class="form-group">
-                    <label for="budgetAmount">Monthly Budget</label>
-                    <input type="number" id="budgetAmount" placeholder="Enter monthly budget">
-                </div>
-                <button type="button" onclick="setBudget()">Set Budget</button>
-            </form>
-        </div>
-
-        <!-- Section to track savings -->
-        <div class="section">
-            <h4>Track Savings</h4>
-            <form id="savingsForm">
-                <div class="form-group">
-                    <label for="savingsGoal">Savings Goal</label>
-                    <input type="number" id="savingsGoal" placeholder="Enter savings goal">
-                </div>
-                <div class="form-group">
-                    <label for="savingsAmount">Amount Saved</label>
-                    <input type="number" id="savingsAmount" placeholder="Enter amount saved so far">
-                </div>
-                <button type="button" onclick="trackSavings()">Track Savings</button>
-            </form>
-        </div>
-
-        <!-- Financial Summary -->
-        <div class="summary">
-            <h4>Financial Summary</h4>
-            <div id="summaryBudget">Budget: Rs 0</div>
-            <div id="summarySavings">Savings Goal: Rs 0</div>
-            <div id="summaryIncome">Total Income: Rs 0</div>
-            <div id="summaryExpenses">Total Expenses: Rs 0</div>
-            <div id="summaryBalance">Remaining Balance: Rs 0</div>
         </div>
     </div>
 
     <script>
+        const transactionList = document.getElementById('transaction-list');
+        const totalIncomeElement = document.getElementById('total-income');
+        const totalExpensesElement = document.getElementById('total-expenses');
+        const netIncomeElement = document.getElementById('net-income');
 
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+        function updateTotals() {
+            const totalIncome = transactions
+                .filter(t => t.type === 'income')
+                .reduce((acc, t) => acc + parseFloat(t.amount), 0);
+            const totalExpenses = transactions
+                .filter(t => t.type === 'expense')
+                .reduce((acc, t) => acc + parseFloat(t.amount), 0);
+            const netIncome = totalIncome - totalExpenses;
+
+            totalIncomeElement.textContent = `$${totalIncome.toFixed(2)}`;
+            totalExpensesElement.textContent = `$${totalExpenses.toFixed(2)}`;
+            netIncomeElement.textContent = `$${netIncome.toFixed(2)}`;
+        }
+
+        function addTransactionToDOM(transaction, index) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${transaction.date}</td>
+                <td>${transaction.category}</td>
+                <td>${transaction.type}</td>
+                <td>$${parseFloat(transaction.amount).toFixed(2)}</td>
+                <td>
+                    <button class="delete-btn" onclick="deleteTransaction(${index})">Delete</button>
+                </td>
+            `;
+            transactionList.appendChild(tr);
+        }
+
+        function updateTransactionList() {
+            transactionList.innerHTML = '';
+            transactions.forEach((transaction, index) => {
+                addTransactionToDOM(transaction, index);
+            });
+            updateTotals();
+        }
+
+        function deleteTransaction(index) {
+            transactions.splice(index, 1);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            updateTransactionList();
+        }
+
+        document.getElementById('add-transaction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const date = document.getElementById('date').value;
+            const category = document.getElementById('category').value;
+            const type = document.getElementById('type').value;
+            const amount = document.getElementById('amount').value;
+
+            const transaction = { date, category, type, amount };
+            transactions.push(transaction);
+
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            updateTransactionList();
+
+            // Clear the form
+            document.getElementById('add-transaction-form').reset();
+        });
+
+        // Load initial transactions from localStorage
+        updateTransactionList();
     </script>
-{% endblock %}
+</body>
+</html>
