@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from .models import Transaction
-from .forms import TransactionFilterForm
+from .forms import TransactionForm
 from django.db.models import Sum
 
 
@@ -24,32 +24,33 @@ def homepage(request):
     return render(request, 'finance/homepage.html')
 
 @login_required
-def transaction_container(request):
-    transactions = Transaction.objects.filter(user=request.user)
 
-    # Filtering
-    filter_form = TransactionFilterForm(request.GET or None)
-    if filter_form.is_valid():
-        if filter_form.cleaned_data['transaction_type']:
-            transactions = transactions.filter(type=filter_form.cleaned_data['transaction_type'])
-        if filter_form.cleaned_data['start_date']:
-            transactions = transactions.filter(date__gte=filter_form.cleaned_data['start_date'])
-        if filter_form.cleaned_data['end_date']:
-            transactions = transactions.filter(date__lte=filter_form.cleaned_data['end_date'])
-        if filter_form.cleaned_data['category']:
-            transactions = transactions.filter(category__icontains=filter_form.cleaned_data['category'])
-
-    # Aggregates
-    total_income = transactions.filter(type='income').aggregate(Sum('amount'))['amount__sum'] or 0
-    total_expenses = transactions.filter(type='expense').aggregate(Sum('amount'))['amount__sum'] or 0
+def homepage(request):
+    transactions = Transaction.objects.all()
+    total_income = sum(t.amount for t in transactions if t.type == 'income')
+    total_expenses = sum(t.amount for t in transactions if t.type == 'expense')
     net_income = total_income - total_expenses
 
-    context = {
+    return render(request, 'homepage.html', {
         'transactions': transactions,
         'total_income': total_income,
         'total_expenses': total_expenses,
         'net_income': net_income,
-        'filter_form': filter_form
-    }
-    return render(request, 'finance/transaction_container.html', context)
+    })
 
+def add_transaction(request):
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('homepage')
+        else:
+            print(form.errors)  # Print errors to console
+    else:
+        form = TransactionForm()
+    return render(request, 'add_transaction.html', {'form': form})
+
+def delete_transaction(request, transaction_id):
+    transaction = Transaction.objects.get(id=transaction_id)
+    transaction.delete()
+    return redirect('dashboard')
