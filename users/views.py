@@ -48,8 +48,7 @@ def signup(request):
             return redirect('signup')
 
         try:
-            user = User.objects.create_user(username=username, email=email, password=password1,
-                                            first_name=first_name, last_name=last_name)
+            user = User.objects.create_user(username=username, email=email, password=password1)
             user.is_active = True  # Deactivate account until it is confirmed
             user.save()
 

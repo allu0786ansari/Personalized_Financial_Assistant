@@ -58,7 +58,7 @@
                         <td>{{ transaction.get_type_display }}</td>
                         <td>${{ transaction.amount }}</td>
                         <td>
-                            <!-- Add delete button functionality in the future -->
+                            <!-- Add delete button functionality  -->
                             <form method="post" style="display:inline;">
                                 {% csrf_token %}
                                 <input type="hidden" name="delete_transaction_id" value="{{ transaction.id }}">

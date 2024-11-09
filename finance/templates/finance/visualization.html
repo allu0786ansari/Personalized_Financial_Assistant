@@ -1,8 +1,82 @@
-{% extends 'users/base.html' %}
-{% load static %}
-{% block content %}
-            <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
-    <div>
-        <h3>Visualization </h3>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Charts</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/visualization.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>My Charts</h1>
+        </header>
+
+        <div class="charts-section">
+            <div class="main-chart">
+                <h2>Total Income vs Expenses</h2>
+                <canvas id="incomeExpenseChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="pie-chart">
+            <h3>Total Amount per Category</h3>
+            <canvas id="categoryPieChart" width="400" height="200"></canvas>
+        </div>
     </div>
-{% endblock %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fetch data from the backend
+            fetch("{% url 'visualization' %}")  // URL to backend view that serves the data
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Log the data for debugging
+                    const { totalIncome, totalExpenses, categoryData } = data;
+
+                    // Income vs Expenses Bar Chart
+                    const incomeExpenseChartCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+                    const incomeExpenseChart = new Chart(incomeExpenseChartCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Income', 'Expenses'],
+                            datasets: [{
+                                label: 'Amount',
+                                data: [totalIncome, totalExpenses],
+                                backgroundColor: ['#3c8dbc', '#ff6384'],
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+                    // Category-wise Pie Chart
+                    const categoryPieChartCtx = document.getElementById('categoryPieChart').getContext('2d');
+                    const categoryPieChart = new Chart(categoryPieChartCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Transport', 'Salary', 'Food', 'Bills', 'Medical', 'Housing', 'Clothes'],
+                            datasets: [{
+                                label: 'Total Amount per Category',
+                                data: categoryData,
+                                backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'],
+                            }]
+                        },
+                        options: {
+                            responsive: true
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
+</body>
+</html>

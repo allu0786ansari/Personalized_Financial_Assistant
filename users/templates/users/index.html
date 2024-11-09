@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -14,7 +13,7 @@
         <link rel="stylesheet" href="">
     </head>
     {% load static %}
-                <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
 
     <body>
         <!-- Navigation Bar -->
@@ -46,20 +45,53 @@
             <h3> Hello, {{ fname }} </h3>
             <h4> You're successfully logged in. </h4>
         {% else %}
-
             <p>Please log in to access your dashboard.</p>
-
         {% endif %}
-        <div class="container">
-            <img src="https://cdn.corporatefinanceinstitute.com/assets/ai-for-financial-analysis-1.jpeg" alt="AI for Financial Analysis" class="image">
-                <div class="content">
-                    <h1>About Our Application</h1>
-                    <p>
-                        Our application leverages advanced AI technologies to enhance financial analysis and decision-making.
-                        With real-time data processing and intuitive dashboards, we empower users to make informed financial decisions with ease.
-                    </p>
 
+        <div class="homepage-container">
+            <header class="header-section">
+                <img
+                    src="https://i.pinimg.com/564x/00/69/10/006910c2ea46ec122ce656109ed7079e.jpg"
+                    alt="Personalized Financial Assistant Logo"
+                    class="logo"
+                />
+                <h1>Welcome to Your Personalized Financial Assistant</h1>
+                <p>Manage your finances effortlessly with tailored advice and insights.</p>
+                <button class="get-started-button" onclick="window.location.href='{% url 'signin' %}'">Get Started</button>
+
+            </header>
+
+            <section class="features-section">
+                <div class="feature">
+                    <img
+                        src="https://i.pinimg.com/736x/fa/bc/a9/fabca99f101d8bc7e4f717a662a50e47.jpg"
+                        alt="Track Spending"
+                        class="feature-image"
+                    />
+                    <h3>Track Your Spending</h3>
+                    <p>Monitor your daily expenses and stay on top of your financial goals.</p>
                 </div>
+
+                <div class="feature">
+                    <img
+                        src="https://i.pinimg.com/564x/af/a4/37/afa43727d61ebb71b08fa1acbe6dc076.jpg"
+                        alt="Investment Insights"
+                        class="feature-image"
+                    />
+                    <h3>Investment Insights</h3>
+                    <p>Get expert investment advice based on your unique financial situation.</p>
+                </div>
+
+                <div class="feature">
+                    <img
+                        src="https://i.pinimg.com/564x/46/6c/dd/466cdd993c110fe377b2fc9dc2278a6e.jpg"
+                        alt="Financial Planning"
+                        class="feature-image"
+                    />
+                    <h3>Financial Planning</h3>
+                    <p>Plan for the future with personalized financial forecasts and budgeting tools.</p>
+                </div>
+            </section>
         </div>
 
         <script src="" async defer></script>
