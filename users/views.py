@@ -134,6 +134,9 @@ def profile(request):
         if form.is_valid():
             form.save()
             return redirect('profile')
+        else:
+            # Debugging form errors
+            print(form.errors)  # This will print the form validation errors in the console
     else:
         form = UserProfileForm(instance=user_profile)
 
