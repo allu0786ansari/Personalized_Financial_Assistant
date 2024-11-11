@@ -5,77 +5,183 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Charts</title>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/visualization.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/transaction.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>My Charts</h1>
+            <h1>Visualization</h1>
+            <nav class="nav-links">
+                <a href="{% url 'homepage' %}">Home</a>
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'signout' %}">Sign Out</a>
+            </nav>
         </header>
 
         <div class="charts-section">
             <div class="main-chart">
                 <h2>Total Income vs Expenses</h2>
-                <canvas id="incomeExpenseChart" width="400" height="200"></canvas>
+                <canvas id="incomeExpenseChart"></canvas>
+                <div>
+                    <label for="income-input">Income:</label>
+                    <input type="number" id="income-input" placeholder="Enter income" />
+                    <label for="expenditure-input">Expenditure:</label>
+                    <input type="number" id="expenditure-input" placeholder="Enter expenditure" />
+                </div>
+            </div>
+            <div class="filter-section">
+                <h3>Filters</h3>
+                <label for="type-select">Type:</label>
+                <select id="type-select">
+                    <option value="any">Any</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+
+                <label for="date-from">Date From:</label>
+                <input type="date" id="date-from">
+
+                <label for="date-to">Date To:</label>
+                <input type="date" id="date-to">
+
+                <h4>Categories</h4>
+                <div class="categories">
+                    <input type="checkbox" id="bills" checked><label for="bills">Bills</label>
+                    <input type="checkbox" id="food"><label for="food">Food</label>
+                    <input type="checkbox" id="clothes"><label for="clothes">Clothes</label>
+                    <input type="checkbox" id="medical" checked><label for="medical">Medical</label>
+                    <input type="checkbox" id="housing" checked><label for="housing">Housing</label>
+                    <input type="checkbox" id="salary" checked><label for="salary">Salary</label>
+                    <input type="checkbox" id="social"><label for="social">Social</label>
+                    <input type="checkbox" id="transport"><label for="transport">Transport</label>
+                    <input type="checkbox" id="vacation"><label for="vacation">Vacation</label>
+                    <input type="checkbox" id="random"><label for="random">Random</label>
+                </div>
+                <button id="filterBtn">Filter</button>
             </div>
         </div>
 
-        <div class="pie-chart">
-            <h3>Total Amount per Category</h3>
-            <canvas id="categoryPieChart" width="400" height="200"></canvas>
+        <div class="pie-charts">
+            <div class="pie-chart">
+                <h3>Total Amount per Category</h3>
+                <canvas id="categoryPieChart1"></canvas>
+                <div>
+                    <label for="category-input-1">Enter amounts (Transport, Salary, Food, Bills, Medical, Housing, Clothes):</label>
+                    <input type="number" id="category-input-1" placeholder="Transport" />
+                    <input type="number" id="category-input-2" placeholder="Salary" />
+                    <input type="number" id="category-input-3" placeholder="Food" />
+                    <input type="number" id="category-input-4" placeholder="Bills" />
+                    <input type="number" id="category-input-5" placeholder="Medical" />
+                    <input type="number" id="category-input-6" placeholder="Housing" />
+                    <input type="number" id="category-input-7" placeholder="Clothes" />
+                </div>
+            </div>
+            <div class="pie-chart">
+                <h3>Total Amount per Category</h3>
+                <canvas id="categoryPieChart2"></canvas>
+                <div>
+                    <label for="category-input-8">Enter amounts (Transport, Salary, Food, Bills, Medical, Housing, Clothes):</label>
+                    <input type="number" id="category-input-8" placeholder="Transport" />
+                    <input type="number" id="category-input-9" placeholder="Salary" />
+                    <input type="number" id="category-input-10" placeholder="Food" />
+                    <input type="number" id="category-input-11" placeholder="Bills" />
+                    <input type="number" id="category-input-12" placeholder="Medical" />
+                    <input type="number" id="category-input-13" placeholder="Housing" />
+                    <input type="number" id="category-input-14" placeholder="Clothes" />
+                </div>
+            </div>
         </div>
     </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Fetch data from the backend
-            fetch("{% url 'visualization' %}")  // URL to backend view that serves the data
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data); // Log the data for debugging
-                    const { totalIncome, totalExpenses, categoryData } = data;
+            const incomeExpenseChartCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+            const categoryPieChart1Ctx = document.getElementById('categoryPieChart1').getContext('2d');
+            const categoryPieChart2Ctx = document.getElementById('categoryPieChart2').getContext('2d');
 
-                    // Income vs Expenses Bar Chart
-                    const incomeExpenseChartCtx = document.getElementById('incomeExpenseChart').getContext('2d');
-                    const incomeExpenseChart = new Chart(incomeExpenseChartCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: ['Income', 'Expenses'],
-                            datasets: [{
-                                label: 'Amount',
-                                data: [totalIncome, totalExpenses],
-                                backgroundColor: ['#3c8dbc', '#ff6384'],
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
+            // Initialize charts with zero data
+            const incomeExpenseChart = new Chart(incomeExpenseChartCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Income', 'Expenditure'],
+                    datasets: [{
+                        label: 'Amount',
+                        data: [0, 0],  // Default data
+                        backgroundColor: ['#3c8dbc', '#ff6384'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
-                    });
+                    }
+                }
+            });
 
-                    // Category-wise Pie Chart
-                    const categoryPieChartCtx = document.getElementById('categoryPieChart').getContext('2d');
-                    const categoryPieChart = new Chart(categoryPieChartCtx, {
-                        type: 'pie',
-                        data: {
-                            labels: ['Transport', 'Salary', 'Food', 'Bills', 'Medical', 'Housing', 'Clothes'],
-                            datasets: [{
-                                label: 'Total Amount per Category',
-                                data: categoryData,
-                                backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'],
-                            }]
-                        },
-                        options: {
-                            responsive: true
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching data:', error));
+            const categoryPieChart1 = new Chart(categoryPieChart1Ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Transport', 'Salary', 'Food', 'Bills', 'Medical', 'Housing', 'Clothes'],
+                    datasets: [{
+                        label: 'Total Amount per Category',
+                        data: [0, 0, 0, 0, 0, 0, 0],  // Default data
+                        backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'],
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+
+            const categoryPieChart2 = new Chart(categoryPieChart2Ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Transport', 'Salary', 'Food', 'Bills', 'Medical', 'Housing', 'Clothes'],
+                    datasets: [{
+                        label: 'Total Amount per Category',
+                        data: [0, 0, 0, 0, 0, 0, 0],  // Default data
+                        backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'],
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+
+            // Filter button logic
+            document.getElementById('filterBtn').addEventListener('click', () => {
+                const income = parseFloat(document.getElementById('income-input').value) || 0;
+                const expenditure = parseFloat(document.getElementById('expenditure-input').value) || 0;
+
+                incomeExpenseChart.data.datasets[0].data = [income, expenditure];
+                incomeExpenseChart.update();
+
+                const categoryData1 = [
+                    parseFloat(document.getElementById('category-input-1').value) || 0,
+                    parseFloat(document.getElementById('category-input-2').value) || 0,
+                    parseFloat(document.getElementById('category-input-3').value) || 0,
+                    parseFloat(document.getElementById('category-input-4').value) || 0,
+                    parseFloat(document.getElementById('category-input-5').value) || 0,
+                    parseFloat(document.getElementById('category-input-6').value) || 0,
+                    parseFloat(document.getElementById('category-input-7').value) || 0
+                ];
+                categoryPieChart1.data.datasets[0].data = categoryData1;
+                categoryPieChart1.update();
+
+                const categoryData2 = [
+                    parseFloat(document.getElementById('category-input-8').value) || 0,
+                    parseFloat(document.getElementById('category-input-9').value) || 0,
+                    parseFloat(document.getElementById('category-input-10').value) || 0,
+                    parseFloat(document.getElementById('category-input-11').value) || 0,
+                    parseFloat(document.getElementById('category-input-12').value) || 0,
+                    parseFloat(document.getElementById('category-input-13').value) || 0,
+                    parseFloat(document.getElementById('category-input-14').value) || 0
+                ];
+                categoryPieChart2.data.datasets[0].data = categoryData2;
+                categoryPieChart2.update();
+            });
         });
     </script>
 </body>

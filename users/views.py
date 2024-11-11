@@ -1,12 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib import messages  # Import messages framework
-from django.contrib.auth import login as auth_login
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm
-from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import PasswordResetView
-from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from .models import UserProfile
@@ -16,11 +11,13 @@ from .forms import UserProfileForm
 def index(request):
     return render(request, "users/index.html")
 
+
 def custom_logout(request):
     if request.user.is_authenticated:
         logout(request)
         messages.success(request, "You have successfully logged out.")
     return redirect('index')
+
 
 def home(request):
     return render(request, "users/home.html")
@@ -29,8 +26,6 @@ def home(request):
 def signup(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
@@ -61,6 +56,7 @@ def signup(request):
 
     return render(request, "users/signup.html")
 
+
 def signin(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -79,19 +75,20 @@ def signin(request):
 
         if user is not None:
             login(request, user)
-            fname = user.first_name
-            return render(request, "users/homepage.html", {'fname': fname})
+            first_name = user.first_name
+            return render(request, "users/homepage.html", {'first_name': first_name})
         else:
             messages.error(request, "Bad Credentials!")
             return redirect('signin')
-    
 
     return render(request, "users/signin.html")
+
 
 def signout(request):
     logout(request)
     messages.success(request, "Logged  out successfully!")
     return redirect('index')
+
 
 def password_reset(request):
     if request.method == 'POST':
@@ -114,16 +111,19 @@ def password_reset(request):
             user.save()
             update_session_auth_hash(request, user)  # Keep user logged in after password change
             messages.success(request, "Your password has been reset successfully.")
-            return redirect('signin')  # Redirect to login
+            return redirect('signin')
 
     return render(request, 'users/password_reset.html')
 
+
 @login_required
-def homepage(requst):
-    return render(requst, 'users/homepage.html')
+def homepage(request):
+    return render(request, 'users/homepage.html')
+
 
 def help(request):
     return render(request, 'users/help.html')
+
 
 @login_required
 def profile(request):

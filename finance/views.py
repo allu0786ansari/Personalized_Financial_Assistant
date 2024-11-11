@@ -1,5 +1,4 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from .models import Transaction
 from .forms import TransactionForm
@@ -62,28 +61,5 @@ def dashboard(request):
 
     return render(request, 'finance/dashboard.html', context)
 
-
 def visualization(request):
-    # Fetch total income and expenses
-    total_income = Transaction.objects.filter(type='income').aggregate(total=Sum('amount'))['total'] or 0
-    total_expenses = Transaction.objects.filter(type='expense').aggregate(total=Sum('amount'))['total'] or 0
-
-    # Fetch total amount per category for pie chart
-    category_totals = Transaction.objects.filter(type='expense').values('category').annotate(total=Sum('amount'))
-
-    # Define categories for labels (ensure it matches the frontend)
-    categories = ['Transport', 'Salary', 'Food', 'Bills', 'Medical', 'Housing', 'Clothes']
-
-    # Create a dictionary for quick lookup of category totals
-    category_totals_dict = {item['category']: item['total'] for item in category_totals}
-
-    # Map the category totals into the correct order for the frontend chart
-    category_data = [category_totals_dict.get(cat, 0) for cat in categories]
-
-    # Return data as JSON
-    data = {
-        'totalIncome': total_income,
-        'totalExpenses': total_expenses,
-        'categoryData': category_data
-    }
-    return JsonResponse(data)
+    return render(request, 'finance/visualization.html')
